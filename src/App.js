@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/authContext";
+import { QueryClient, QueryClientProvider } from 'react-query';
+import DarkModeToggle from "./components/DarkModeToggle";
+import theme from "./theme";
+import LoginPage from "./components/Auth/LoginPage";
+import ActiveOrders from "./components/Orders/ActiveOrders";
+import CompletedOrders from "./components/Orders/CompletedOrders";
 
-function App() {
+const queryClient = new QueryClient();
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <Router>
+          <AuthProvider>
+            <DarkModeToggle />
+            <Routes>
+              <Route path="/" element={<LoginPage />} />
+              <Route path="/orders" element={<ActiveOrders />} />
+              <Route path="/completed-orders" element={<CompletedOrders />} />
+            </Routes>
+          </AuthProvider>
+        </Router>
+      </ChakraProvider>
+    </QueryClientProvider>
   );
-}
+};
 
 export default App;
